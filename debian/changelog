@@ -1,0 +1,449 @@
+haskell-yaml (0.11.4.0-deepin1) unstable; urgency=medium
+
+  * Rebuild
+
+ -- Deepin Packages Builder <packages@deepin.org>  Mon, 14 Nov 2022 17:42:54 +0800
+
+haskell-yaml (0.11.4.0-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Sat, 30 May 2020 18:08:34 -0400
+
+haskell-yaml (0.11.1.0-1) unstable; urgency=medium
+
+  * New upstream version.
+
+ -- Clint Adams <clint@debian.org>  Thu, 01 Aug 2019 21:55:48 -0400
+
+haskell-yaml (0.8.32-4) unstable; urgency=medium
+
+  * Backport upstream patch to fix tests on 32-bit machines
+
+ -- Ilias Tsitsimpis <iliastsi@debian.org>  Tue, 23 Oct 2018 16:31:21 +0300
+
+haskell-yaml (0.8.32-3) unstable; urgency=medium
+
+  * Backport upstream patch to build against system libyaml
+
+ -- Ilias Tsitsimpis <iliastsi@debian.org>  Tue, 23 Oct 2018 15:32:38 +0300
+
+haskell-yaml (0.8.32-2) unstable; urgency=medium
+
+  * Remove build dependency on libghc-text-dev (provided by ghc-8.4.3)
+
+ -- Ilias Tsitsimpis <iliastsi@debian.org>  Mon, 01 Oct 2018 13:47:49 +0300
+
+haskell-yaml (0.8.32-1) unstable; urgency=medium
+
+  * Bump debhelper compat level to 10
+  * New upstream release
+
+ -- Ilias Tsitsimpis <iliastsi@debian.org>  Sat, 29 Sep 2018 20:51:25 +0300
+
+haskell-yaml (0.8.31.1-1) unstable; urgency=medium
+
+  * Set Rules-Requires-Root to no.
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Wed, 04 Jul 2018 17:59:35 -0400
+
+haskell-yaml (0.8.29-2) unstable; urgency=medium
+
+  * Re-enable building of json2yaml and yaml2json.
+
+ -- Clint Adams <clint@debian.org>  Sun, 15 Apr 2018 22:07:53 -0400
+
+haskell-yaml (0.8.29-1) unstable; urgency=medium
+
+  [ Ilias Tsitsimpis ]
+  * Use salsa.debian.org URLs in Vcs-{Browser,Git} fields
+
+  [ Clint Adams ]
+  * Bump to Standards-Version 4.1.4.
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Mon, 09 Apr 2018 17:32:31 -0400
+
+haskell-yaml (0.8.25-1) unstable; urgency=medium
+
+  [ Ilias Tsitsimpis ]
+  * Change Priority to optional. Since Debian Policy version 4.0.1,
+    priority extra has been deprecated.
+  * Use the HTTPS form of the copyright-format URL
+  * Modify d/watch and Source field in d/copyright to use HTTPS
+  * Declare compliance with Debian policy 4.1.1
+
+  [ Clint Adams ]
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Fri, 24 Nov 2017 16:18:25 -0500
+
+haskell-yaml (0.8.23.3-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Tue, 18 Jul 2017 23:36:45 -0400
+
+haskell-yaml (0.8.23.1-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Thu, 06 Jul 2017 22:37:34 -0400
+
+haskell-yaml (0.8.23-3) unstable; urgency=medium
+
+  * Patch testsuite to work against the released version of libyaml.
+    closes: #865711 for now.
+
+ -- Clint Adams <clint@debian.org>  Thu, 29 Jun 2017 17:55:30 -0400
+
+haskell-yaml (0.8.23-2) unstable; urgency=medium
+
+  * Team upload.
+  * Add hunit, hspec, mockery build-dependencies
+    (thanks Samuel Thibault! Closes: #865512)
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Fri, 23 Jun 2017 15:18:17 +0200
+
+haskell-yaml (0.8.23-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Sun, 18 Jun 2017 02:34:47 -0400
+
+haskell-yaml (0.8.20-2) unstable; urgency=medium
+
+  * Upload to unstable as part of GHC 8 transition.
+
+ -- Clint Adams <clint@debian.org>  Thu, 27 Oct 2016 18:37:08 -0400
+
+haskell-yaml (0.8.20-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Wed, 26 Oct 2016 19:17:53 -0400
+
+haskell-yaml (0.8.18.7-2) experimental; urgency=medium
+
+  * Temporarily build-depend on ghc 8.
+
+ -- Clint Adams <clint@debian.org>  Mon, 17 Oct 2016 16:57:37 -0400
+
+haskell-yaml (0.8.18.7-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Thu, 29 Sep 2016 11:52:31 -0400
+
+haskell-yaml (0.8.18.6-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Fri, 16 Sep 2016 23:39:03 -0400
+
+haskell-yaml (0.8.18.5-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Fri, 09 Sep 2016 11:40:16 -0400
+
+haskell-yaml (0.8.18.4-3) unstable; urgency=medium
+
+  * Work around upstream test-suite breakage.
+
+ -- Clint Adams <clint@debian.org>  Tue, 06 Sep 2016 13:58:35 -0400
+
+haskell-yaml (0.8.18.4-2) unstable; urgency=medium
+
+  * Set locale to C.UTF-8 if running test suite.
+
+ -- Clint Adams <clint@debian.org>  Tue, 06 Sep 2016 13:10:54 -0400
+
+haskell-yaml (0.8.18.4-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Sun, 04 Sep 2016 12:07:46 -0400
+
+haskell-yaml (0.8.18.1-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Thu, 04 Aug 2016 13:41:46 -0400
+
+haskell-yaml (0.8.18-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Tue, 12 Jul 2016 16:02:37 -0400
+
+haskell-yaml (0.8.17.1-1) unstable; urgency=medium
+
+  [ Dmitry Bogatov ]
+  * Use secure (https) uri in Vcs-Git field in 'debian/control'
+  * Bump standards version to 3.9.8 (no changes needed)
+  * Convert `debian/copyright' to dep5 format
+
+  [ Joachim Breitner ]
+  * New upstream release
+
+ -- Joachim Breitner <nomeata@debian.org>  Mon, 30 May 2016 17:19:40 +0200
+
+haskell-yaml (0.8.15.2-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Mon, 11 Jan 2016 00:42:38 -0500
+
+haskell-yaml (0.8.15.1-3) unstable; urgency=medium
+
+  * Forcibly disable testsuite on mips*.
+
+ -- Clint Adams <clint@debian.org>  Thu, 17 Dec 2015 14:19:00 -0500
+
+haskell-yaml (0.8.15.1-2) unstable; urgency=medium
+
+  * Install test build dependencies on all arches.
+
+ -- Joachim Breitner <nomeata@debian.org>  Sun, 13 Dec 2015 23:03:38 +0100
+
+haskell-yaml (0.8.15.1-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Clint Adams <clint@debian.org>  Thu, 03 Dec 2015 23:48:33 -0500
+
+haskell-yaml (0.8.12-7) unstable; urgency=medium
+
+  [ Joachim Breitner ]
+  * Depend on test dependencies also on hppa (Closes: #801828)
+
+  [ Clint Adams ]
+  * Switch Vcs-Git/Vcs-Browser headers to new location.
+
+ -- Clint Adams <clint@debian.org>  Thu, 03 Dec 2015 14:55:18 -0500
+
+haskell-yaml (0.8.12-6) experimental; urgency=medium
+
+  * Fix detection of TH support
+
+ -- Joachim Breitner <nomeata@debian.org>  Fri, 11 Sep 2015 22:07:35 +0200
+
+haskell-yaml (0.8.12-5) experimental; urgency=medium
+
+  * Build-depend on test-related packages also on ppc64.
+
+ -- Joachim Breitner <nomeata@debian.org>  Sat, 22 Aug 2015 09:38:38 +0200
+
+haskell-yaml (0.8.12-4) experimental; urgency=medium
+
+  * Depend on haskell-devscripts >= 0.10 to ensure that this package
+    builds against GHC in experimental
+
+ -- Joachim Breitner <nomeata@debian.org>  Thu, 20 Aug 2015 10:29:07 +0200
+
+haskell-yaml (0.8.12-3) unstable; urgency=medium
+
+  * Build-depend on test-related packages on arm64, armel, armhf, ppc64el,
+    and s390x as well, since they now have TH.
+
+ -- Colin Watson <cjwatson@debian.org>  Sun, 16 Aug 2015 21:39:06 +0100
+
+haskell-yaml (0.8.12-2) unstable; urgency=medium
+
+  * Fix typos in the recent upload
+
+ -- Joachim Breitner <nomeata@debian.org>  Sun, 16 Aug 2015 18:01:13 +0200
+
+haskell-yaml (0.8.12-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Daniel Silverstone <dsilvers@digital-scurf.org>  Wed, 12 Aug 2015 13:20:35 +0200
+
+haskell-yaml (0.8.11-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Joachim Breitner <nomeata@debian.org>  Mon, 29 Jun 2015 13:44:43 +0200
+
+haskell-yaml (0.8.10.1-3) unstable; urgency=medium
+
+  * Rebuild due to haskell-devscripts bug affecting the previous
+
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 28 Apr 2015 23:59:21 +0200
+
+haskell-yaml (0.8.10.1-2) unstable; urgency=medium
+
+  * Upload to unstable
+
+ -- Joachim Breitner <nomeata@debian.org>  Mon, 27 Apr 2015 11:55:28 +0200
+
+haskell-yaml (0.8.10.1-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Joachim Breitner <nomeata@debian.org>  Thu, 16 Apr 2015 15:22:28 +0200
+
+haskell-yaml (0.8.9.1-2) experimental; urgency=medium
+
+  * Depend on haskell-devscripts 0.9, found in experimental
+  * Do not depend on transformers, which now comes with GHC
+
+ -- Joachim Breitner <nomeata@debian.org>  Sat, 20 Dec 2014 20:32:19 +0100
+
+haskell-yaml (0.8.9.1-1) unstable; urgency=medium
+
+  * New upstream version.
+
+ -- Clint Adams <clint@debian.org>  Fri, 19 Sep 2014 14:45:37 -0400
+
+haskell-yaml (0.8.8.4-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 05 Aug 2014 00:01:07 +0200
+
+haskell-yaml (0.8.8.3-2) unstable; urgency=medium
+
+  * Clean tempfiles in clean target.
+
+ -- Clint Adams <clint@debian.org>  Sat, 14 Jun 2014 17:05:16 -0400
+
+haskell-yaml (0.8.8.3-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Joachim Breitner <nomeata@debian.org>  Tue, 03 Jun 2014 16:20:58 +0200
+
+haskell-yaml (0.8.8.2-1) unstable; urgency=medium
+
+  * New upstream version.
+  * Install {json2yaml,yaml2json} binaries to -dev package for now.
+
+ -- Clint Adams <clint@debian.org>  Tue, 22 Apr 2014 15:02:04 -0400
+
+haskell-yaml (0.8.5.4-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump standards version, no change
+
+ -- Raúl Benencia <rul@kalgan.cc>  Sat, 19 Apr 2014 14:16:33 -0300
+
+haskell-yaml (0.8.5.1-2) unstable; urgency=low
+
+  * Only enable tests on architectures with GHCi, due to use of Template
+    Haskell.
+
+ -- Colin Watson <cjwatson@debian.org>  Mon, 25 Nov 2013 16:13:10 +0000
+
+haskell-yaml (0.8.5.1-1) unstable; urgency=low
+
+  [ Joachim Breitner ]
+  * Adjust watch file to new hackage layout
+
+  [ Clint Adams ]
+  * New upstream version.
+
+ -- Clint Adams <clint@debian.org>  Fri, 22 Nov 2013 22:08:18 -0500
+
+haskell-yaml (0.8.2.3-3) unstable; urgency=low
+
+  * Move Haskell blurb to the end of the description, reduces the impact
+    of #708703
+
+ -- Joachim Breitner <nomeata@debian.org>  Sat, 25 May 2013 23:52:57 +0200
+
+haskell-yaml (0.8.2.3-2) unstable; urgency=low
+
+  * Enable compat level 9
+  * Use substvars for Haskell description blurbs
+
+ -- Joachim Breitner <nomeata@debian.org>  Fri, 24 May 2013 12:52:35 +0200
+
+haskell-yaml (0.8.2.3-1) experimental; urgency=low
+
+  * New upstream release
+  * Adjust conduit BD to match upstream check.
+
+ -- Iain Lane <laney@debian.org>  Sat, 30 Mar 2013 12:14:31 +0000
+
+haskell-yaml (0.8.1-1) experimental; urgency=low
+
+  [ Joachim Breitner ]
+  * Depend on haskell-devscripts 0.8.13 to ensure this package is built
+    against experimental
+  * Bump standards version, no change
+
+  [ Clint Adams ]
+  * New upstream version.
+
+ -- Clint Adams <clint@debian.org>  Sat, 20 Oct 2012 15:34:07 -0400
+
+haskell-yaml (0.7.0.2-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Clint Adams <clint@debian.org>  Thu, 24 May 2012 22:49:30 -0400
+
+haskell-yaml (0.7.0-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Clint Adams <clint@debian.org>  Tue, 15 May 2012 17:30:18 -0400
+
+haskell-yaml (0.5.2-3) unstable; urgency=low
+
+  [ Joey Hess ]
+  * Fix package description; this package does not provide an interface to
+    syck, but to libYAML.
+
+  [ Clint Adams ]
+  * Bump to Standards-Version 3.9.3.
+  * Enable test suite.
+
+ -- Clint Adams <clint@debian.org>  Fri, 02 Mar 2012 12:03:09 -0500
+
+haskell-yaml (0.5.2-2) unstable; urgency=low
+
+  * Sourceful upload to rebuild documentation package
+
+ -- Joachim Breitner <nomeata@debian.org>  Sat, 11 Feb 2012 00:04:39 +0100
+
+haskell-yaml (0.5.2-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Clint Adams <clint@debian.org>  Wed, 01 Feb 2012 21:50:19 -0500
+
+haskell-yaml (0.4.1.2-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Clint Adams <clint@debian.org>  Mon, 26 Dec 2011 21:09:24 -0500
+
+haskell-yaml (0.4.1.1-2) unstable; urgency=low
+
+  * Have libghc-yaml-dev depend on libyaml-dev.
+
+ -- Clint Adams <clint@debian.org>  Sun, 09 Oct 2011 15:06:54 -0400
+
+haskell-yaml (0.4.1.1-1) unstable; urgency=low
+
+  * New upstream version.
+  * Use system libyaml again.
+
+ -- Clint Adams <clint@debian.org>  Sat, 08 Oct 2011 12:55:05 -0400
+
+haskell-yaml (0.4.1-2) unstable; urgency=low
+
+  * Disable patch to use system libyaml.
+
+ -- Clint Adams <clint@debian.org>  Tue, 13 Sep 2011 20:42:31 -0400
+
+haskell-yaml (0.4.1-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Clint Adams <clint@debian.org>  Wed, 24 Aug 2011 20:41:45 -0400
