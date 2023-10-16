@@ -1,5 +1,28 @@
 # ChangeLog for yaml
 
+## 0.11.8.0
+
+* Export `Parse` and `StringStyle` [#204](https://github.com/snoyberg/yaml/pull/204)
+
+## 0.11.7.0
+
+* Support `aeson` 2 [#202](https://github.com/snoyberg/yaml/pull/202)
+
+## 0.11.6.0
+
+* `yaml2json`: add `--help` and `--version` options [#197](https://github.com/snoyberg/yaml/pull/197)
+* `json2yaml`: add `--help` and `--version` options [#198](https://github.com/snoyberg/yaml/pull/198)
+* Add the `-o` options to both `yaml2json` and `json2yaml` [#200](https://github.com/snoyberg/yaml/pull/200)
+
+## 0.11.5.0
+
+* New functions capable of parsing YAML streams containing multiple documents into a list of results:
+  * `decodeAllEither'`
+  * `decodeAllFileEither`
+  * `decodeAllFileWithWarnings`
+  * `decodeAllThrow`
+  * `decodeAllFileThrow`
+
 ## 0.11.4.0
 
 * add `ToYaml` instance for `String` [#186](https://github.com/snoyberg/yaml/pull/186)

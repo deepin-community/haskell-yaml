@@ -1,8 +1,10 @@
-haskell-yaml (0.11.4.0-deepin1) unstable; urgency=medium
+haskell-yaml (0.11.8.0-1) unstable; urgency=medium
 
-  * Rebuild
+  * New upstream release
+  * Declare compliance with Debian policy 4.6.1
+  * Drop the yaml2json and json2yaml binaries (Closes: #951490)
 
- -- Deepin Packages Builder <packages@deepin.org>  Mon, 14 Nov 2022 17:42:54 +0800
+ -- Ilias Tsitsimpis <iliastsi@debian.org>  Wed, 27 Jul 2022 14:08:54 +0300
 
 haskell-yaml (0.11.4.0-1) unstable; urgency=medium
 
