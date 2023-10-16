@@ -9,10 +9,14 @@ module Data.Yaml.Internal
     , prettyPrintParseException
     , Warning(..)
     , parse
+    , Parse
     , decodeHelper
     , decodeHelper_
+    , decodeAllHelper
+    , decodeAllHelper_
     , textToScientific
     , stringScalar
+    , StringStyle
     , defaultStringStyle
     , isSpecialString
     , specialStrings
@@ -31,6 +35,13 @@ import Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import Control.Monad.State.Strict
 import Control.Monad.Reader
 import Data.Aeson
+#if MIN_VERSION_aeson(2,0,0)
+import qualified Data.Aeson.Key as K
+import qualified Data.Aeson.KeyMap as M
+import Data.Aeson.KeyMap (KeyMap)
+#else
+import qualified Data.HashMap.Strict as M
+#endif
 import Data.Aeson.Internal (JSONPath, JSONPathElement(..), formatError)
 import Data.Aeson.Types hiding (parse)
 import qualified Data.Attoparsec.Text as Atto
@@ -43,22 +54,39 @@ import Data.Char (toUpper, ord)
 import Data.List
 import Data.Conduit ((.|), ConduitM, runConduit)
 import qualified Data.Conduit.List as CL
-import qualified Data.HashMap.Strict as M
 import qualified Data.HashSet as HashSet
 import           Data.Map (Map)
 import qualified Data.Map as Map
 import           Data.Set (Set)
 import qualified Data.Set as Set
 import Data.Scientific (Scientific, base10Exponent, coefficient)
-import Data.Text (Text, pack)
+import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8With, encodeUtf8)
 import Data.Text.Encoding.Error (lenientDecode)
 import Data.Typeable
 import qualified Data.Vector as V
+import Data.Void (Void)
 
 import qualified Text.Libyaml as Y
 import Text.Libyaml hiding (encode, decode, encodeFile, decodeFile)
+
+#if MIN_VERSION_aeson(2,0,0)
+fromText :: T.Text -> K.Key
+fromText = K.fromText
+
+toText :: K.Key -> T.Text
+toText = K.toText
+#else
+fromText :: T.Text -> T.Text
+fromText = id
+
+toText :: Key -> T.Text
+toText = id
+
+type KeyMap a = M.HashMap Text a
+type Key = Text
+#endif
 
 data ParseException = NonScalarKey
                     | UnknownAlias { _anchorName :: Y.AnchorName }
@@ -66,6 +94,7 @@ data ParseException = NonScalarKey
                                       , _expected :: Maybe Event
                                       }
                     | InvalidYaml (Maybe YamlException)
+                    | MultipleDocuments
                     | AesonException String
                     | OtherParseException SomeException
                     | NonStringKey JSONPath
@@ -115,6 +144,7 @@ prettyPrintParseException pe = case pe of
             _  -> ",\n" ++ context ++ ":\n"
         , problem
         ]
+  MultipleDocuments -> "Multiple YAML documents encountered"
   AesonException s -> "Aeson exception:\n" ++ s
   OtherParseException exc -> "Generic parse exception:\n" ++ show exc
   NonStringKey path -> formatError path "Non-string keys are not supported"
@@ -158,24 +188,34 @@ requireEvent e = do
 
 parse :: ReaderT JSONPath (ConduitM Event o Parse) Value
 parse = do
+    docs <- parseAll
+    case docs of
+        [] -> return Null
+        [doc] -> return doc
+        _ -> liftIO $ throwIO MultipleDocuments
+
+parseAll :: ReaderT JSONPath (ConduitM Event o Parse) [Value]
+parseAll = do
     streamStart <- lift CL.head
     case streamStart of
         Nothing ->
             -- empty string input
-            return Null
-        Just EventStreamStart -> do
-            documentStart <- lift CL.head
-            case documentStart of
-                Just EventStreamEnd ->
-                    -- empty file input, comment only string/file input
-                    return Null
-                Just EventDocumentStart -> do
-                    res <- parseO
-                    requireEvent EventDocumentEnd
-                    requireEvent EventStreamEnd
-                    return res
-                _ -> liftIO $ throwIO $ UnexpectedEvent documentStart Nothing
-        _ -> liftIO $ throwIO $ UnexpectedEvent streamStart Nothing
+            return []
+        Just EventStreamStart ->
+            -- empty file input, comment only string/file input
+            parseDocs
+        _ -> missed streamStart
+  where
+    parseDocs = do
+        documentStart <- lift CL.head
+        case documentStart of
+            Just EventStreamEnd -> return []
+            Just EventDocumentStart -> do
+                res <- parseO
+                requireEvent EventDocumentEnd
+                (res :) <$> parseDocs
+            _ -> missed documentStart
+    missed event = liftIO $ throwIO $ UnexpectedEvent event Nothing
 
 parseScalar :: ByteString -> Anchor -> Style -> Tag
             -> ReaderT JSONPath (ConduitM Event o Parse) Text
@@ -240,9 +280,9 @@ parseS !n a front = do
             o <- local (Index n :) parseO
             parseS (succ n) a $ front . (:) o
 
-parseM :: Set Text
+parseM :: Set Key
        -> Y.Anchor
-       -> M.HashMap Text Value
+       -> KeyMap Value
        -> ReaderT JSONPath (ConduitM Event o Parse) Value
 parseM mergedKeys a front = do
     me <- lift CL.head
@@ -253,12 +293,12 @@ parseM mergedKeys a front = do
             return res
         _ -> do
             s <- case me of
-                    Just (EventScalar v tag style a') -> parseScalar v a' style tag
+                    Just (EventScalar v tag style a') -> fromText <$> parseScalar v a' style tag
                     Just (EventAlias an) -> do
                         m <- lookupAnchor an
                         case m of
                             Nothing -> liftIO $ throwIO $ UnknownAlias an
-                            Just (String t) -> return t
+                            Just (String t) -> return $ fromText t
                             Just v -> liftIO $ throwIO $ NonStringKeyAlias an v
                     _ -> do
                         path <- ask
@@ -271,7 +311,7 @@ parseM mergedKeys a front = do
                           path <- reverse <$> ask
                           addWarning (DuplicateKey path)
                       return (Set.delete s mergedKeys, M.insert s o front)
-              if s == pack "<<"
+              if s == "<<"
                          then case o of
                                   Object l  -> return (merge l)
                                   Array l -> return $ merge $ foldl' mergeObjects M.empty $ V.toList l
@@ -283,36 +323,56 @@ parseM mergedKeys a front = do
 
           merge xs = (Set.fromList (M.keys xs \\ M.keys front), M.union front xs)
 
+parseSrc :: ReaderT JSONPath (ConduitM Event Void Parse) val
+         -> ConduitM () Event Parse ()
+         -> IO (val, ParseState)
+parseSrc eventParser src = runResourceT $ runStateT
+    (runConduit $ src .| runReaderT eventParser [])
+    (ParseState Map.empty [])
+
+mkHelper :: ReaderT JSONPath (ConduitM Event Void Parse) val -- ^ parse libyaml events as Value or [Value]
+         -> (SomeException -> IO (Either ParseException a))  -- ^ what to do with unhandled exceptions
+         -> ((val, ParseState) -> Either ParseException a)   -- ^ further transform and parse results
+         -> ConduitM () Event Parse ()                       -- ^ the libyaml event (string/file) source
+         -> IO (Either ParseException a)
+mkHelper eventParser onOtherExc extractResults src = catches
+    (extractResults <$> parseSrc eventParser src)
+    [ Handler $ \pe -> return $ Left (pe :: ParseException)
+    , Handler $ \ye -> return $ Left $ InvalidYaml $ Just (ye :: YamlException)
+    , Handler $ \sae -> throwIO (sae :: SomeAsyncException)
+    , Handler onOtherExc
+    ]
+
 decodeHelper :: FromJSON a
              => ConduitM () Y.Event Parse ()
              -> IO (Either ParseException ([Warning], Either String a))
-decodeHelper src = do
-    -- This used to be tryAny, but the fact is that catching async
-    -- exceptions is fine here. We'll rethrow them immediately in the
-    -- otherwise clause.
-    x <- try $ runResourceT $ runStateT (runConduit $ src .| runReaderT parse []) (ParseState Map.empty [])
-    case x of
-        Left e
-            | Just pe <- fromException e -> return $ Left pe
-            | Just ye <- fromException e -> return $ Left $ InvalidYaml $ Just (ye :: YamlException)
-            | otherwise -> throwIO e
-        Right (y, st) -> return $ Right (parseStateWarnings st, parseEither parseJSON y)
+decodeHelper = mkHelper parse throwIO $ \(v, st) ->
+    Right (parseStateWarnings st, parseEither parseJSON v)
+
+decodeAllHelper :: FromJSON a
+                => ConduitM () Event Parse ()
+                -> IO (Either ParseException ([Warning], Either String [a]))
+decodeAllHelper = mkHelper parseAll throwIO $ \(vs, st) ->
+    Right (parseStateWarnings st, mapM (parseEither parseJSON) vs)
+
+catchLeft :: SomeException -> IO (Either ParseException a)
+catchLeft = return . Left . OtherParseException
 
 decodeHelper_ :: FromJSON a
               => ConduitM () Event Parse ()
               -> IO (Either ParseException ([Warning], a))
-decodeHelper_ src = do
-    x <- try $ runResourceT $ runStateT (runConduit $ src .| runReaderT parse []) (ParseState Map.empty [])
-    case x of
-        Left e
-            | Just pe <- fromException e -> return $ Left pe
-            | Just ye <- fromException e -> return $ Left $ InvalidYaml $ Just (ye :: YamlException)
-            | Just sae <- fromException e -> throwIO (sae :: SomeAsyncException)
-            | otherwise -> return $ Left $ OtherParseException e
-        Right (y, st) -> return $ either
-            (Left . AesonException)
-            Right
-            ((,) (parseStateWarnings st) <$> parseEither parseJSON y)
+decodeHelper_ = mkHelper parse catchLeft $ \(v, st) ->
+    case parseEither parseJSON v of
+        Left e -> Left $ AesonException e
+        Right x -> Right (parseStateWarnings st, x)
+
+decodeAllHelper_ :: FromJSON a
+                 => ConduitM () Event Parse ()
+                 -> IO (Either ParseException ([Warning], [a]))
+decodeAllHelper_ = mkHelper parseAll catchLeft $ \(vs, st) ->
+    case mapM (parseEither parseJSON) vs of
+        Left e -> Left $ AesonException e
+        Right xs -> Right (parseStateWarnings st, xs)
 
 type StringStyle = Text -> ( Tag, Style )
 
@@ -382,7 +442,7 @@ objToEvents stringStyle = objToEvents' . toJSON
       : foldr pairToEvents (EventMappingEnd : rest) (M.toList o)
       where
         pairToEvents :: Pair -> [Y.Event] -> [Y.Event]
-        pairToEvents (k, v) = objToEvents' (String k) . objToEvents' v
+        pairToEvents (k, v) = objToEvents' (String $ toText k) . objToEvents' v
 
     objToEvents' (String s) rest = stringScalar stringStyle Nothing s : rest
 
